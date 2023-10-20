@@ -16,7 +16,7 @@ class SekolahController extends Controller
     {
         //
         $sekolahs = Sekolah::all();
-        return view('sekolahs.index',[
+        return view('sekolahs.index', [
             'sekolahs' => $sekolahs
         ]);
     }
@@ -26,9 +26,11 @@ class SekolahController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Sekolah $request)
     {
-        //
+        return view('sekolahs.create', [
+            'sekolahs' => $request
+        ]);
     }
 
     /**
@@ -39,7 +41,15 @@ class SekolahController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        echo "<script>console.log('Debug Objects: " . $request->namasekolah . "' );</script>";
+        $sekolah= new Sekolah;
+        $sekolah->namasekolah = $request->namasekolah;
+        $sekolah->alamat = $request->alamat;
+        $sekolah->longitude = $request->longitude;
+        $sekolah->latitude = $request->latitude;
+        $sekolah->save();
+
+        return redirect()->route('sekolahs.index')->with('success', 'Data Sekolah Berhasil Ditambahkan');
     }
 
     /**
