@@ -16,13 +16,14 @@
                     </div>
                     <br>
                     <table class="table table-hover table-bordered table-stripped">
-                    {{-- <table class="table table-hover "> --}}
+                        {{-- <table class="table table-hover "> --}}
                         <thead>
                             <tr>
                                 <th>Nama Sekolah</th>
                                 <th>Alamat</th>
                                 <th>Longitude</th>
                                 <th>Alamat</th>
+                                <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -32,13 +33,34 @@
                                     <td>{{ $sekolah->alamat }}</td>
                                     <td>{{ $sekolah->longitude }}</td>
                                     <td>{{ $sekolah->latitude }}</td>
+                                    <td>
+                                        <a href="{{ route('sekolahs.show', $sekolah->id) }}" class="btn btn-primary">Lihat</a>
+                                        {{-- <a href="" class="btn btn-primary">Lihat</a> --}}
+                                        <a href="{{ route('sekolahs.edit', $sekolah->id) }}" class="btn btn-warning">Edit</a>
+                                        {{-- <a href="" class="btn btn-warning">Edit</a> --}}
+                                        <form action="{{ route('sekolahs.destroy', $sekolah->id) }}" id="delete-form" method="POST"
+                                        {{-- <form action="" method="POST" --}}
+                                            style="display: inline-block;">
+                                            @csrf
+                                            @method('DELETE')
+                                            {{-- <button type="submit" class="btn btn-danger">Hapus</button> --}}
+                                            <button type="button" class="btn btn-danger" onclick="confirmDelete()">Hapus</button>
+                                        </form>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
-                    
+
                 </div>
             </div>
         </div>
     </div>
 @stop
+<script>
+    function confirmDelete() {
+        if (confirm('Anda yakin ingin menghapus sekolah ini?')) {
+            document.getElementById('delete-form').submit();
+        }
+    }
+</script>

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Cookie;
+
 use Illuminate\Http\Request;
 use App\Models\Sekolah;
 
@@ -26,11 +28,9 @@ class SekolahController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Sekolah $request)
+    public function create()
     {
-        return view('sekolahs.create', [
-            'sekolahs' => $request
-        ]);
+        return view('sekolahs.create');
     }
 
     /**
@@ -42,7 +42,7 @@ class SekolahController extends Controller
     public function store(Request $request)
     {
         echo "<script>console.log('Debug Objects: " . $request->namasekolah . "' );</script>";
-        $sekolah= new Sekolah;
+        $sekolah = new Sekolah;
         $sekolah->namasekolah = $request->namasekolah;
         $sekolah->alamat = $request->alamat;
         $sekolah->longitude = $request->longitude;
@@ -61,6 +61,10 @@ class SekolahController extends Controller
     public function show($id)
     {
         //
+        $sekolah = Sekolah::findOrFail($id);
+        return view('sekolahs.show', [
+            'sekolah' => $sekolah
+        ]);
     }
 
     /**
@@ -72,6 +76,10 @@ class SekolahController extends Controller
     public function edit($id)
     {
         //
+        $sekolah = Sekolah::findOrFail($id);
+        return view('sekolahs.edit', [
+            'sekolah' => $sekolah
+        ]);
     }
 
     /**
@@ -84,6 +92,16 @@ class SekolahController extends Controller
     public function update(Request $request, $id)
     {
         //
+        Cookie::queue('nama_cookie', 'nilai_cookie', 60);
+
+        $sekolah = Sekolah::findOrFail($id);
+        $sekolah->namasekolah = $request->namasekolah;
+        $sekolah->alamat = $request->alamat;
+        $sekolah->longitude = $request->longitude;
+        $sekolah->latitude = $request->latitude;
+        $sekolah->save();
+
+        return redirect()->route('sekolahs.index')->with('success', 'Data sekolah berhasil diupdate.');
     }
 
     /**
@@ -95,5 +113,10 @@ class SekolahController extends Controller
     public function destroy($id)
     {
         //
+
+        $sekolah = Sekolah::findOrFail($id);
+        $sekolah->delete();
+
+        return redirect()->route('sekolahs.index')->with('success', 'Data sekolah berhasil dihapus.');
     }
 }

@@ -56,7 +56,7 @@
                         <div style="height: 400px;" id="map"></div>
                         <div class="card-footer">
                             <button type="submit" class="btn btn-primary">Simpan</button>
-                            <a href="{{route('sekolahs.index')}}" class="btn btn-danger">Batal</a>
+                            <a href="{{ route('sekolahs.index') }}" class="btn btn-danger">Batal</a>
                         </div>
                     </div>
                 </div>
@@ -81,11 +81,17 @@
             subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
         }).addTo(map);
         // Define a click event handler
+        var marker; // Variable to store the marker
         function onMapClick(e) {
             // alert("Latitude: " + e.latlng.lat + "\nLongitude: " + e.latlng.lng);
             document.getElementById('InputLongitude').value = e.latlng.lat;
             document.getElementById('InputLatitude').value = e.latlng.lng;
-            L.marker(e.latlng).addTo(map)
+
+            if (marker) {
+                map.removeLayer(marker);
+            }
+
+            marker = L.marker(e.latlng).addTo(map)
                 .bindPopup("Koordinat: " + e.latlng.toString())
                 .openPopup();
         }
