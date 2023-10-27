@@ -84,8 +84,8 @@
         var marker; // Variable to store the marker
         function onMapClick(e) {
             // alert("Latitude: " + e.latlng.lat + "\nLongitude: " + e.latlng.lng);
-            document.getElementById('InputLongitude').value = e.latlng.lat;
-            document.getElementById('InputLatitude').value = e.latlng.lng;
+            document.getElementById('InputLatitude').value = e.latlng.lat;
+            document.getElementById('InputLongitude').value = e.latlng.lng;
 
             if (marker) {
                 map.removeLayer(marker);

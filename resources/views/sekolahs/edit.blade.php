@@ -68,14 +68,19 @@
 @stop
 @push('js')
     <script>
-        var map = L.map('map').setView([-6.88501587006287, 107.57960538511298], 17);
-
+        
+        var longitude = document.getElementById("InputLongitude").value;
+        var latitude = document.getElementById("InputLatitude").value;
+        
+        var map = L.map('map').setView([longitude, latitude], 17);
+        var marker = L.marker([longitude, latitude]).addTo(map);
+        
         L.tileLayer('https://{s}.google.com/vt?lyrs=m&x={x}&y={y}&z={z}', {
             maxZoom: 19,
             subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
         }).addTo(map);
         // Define a click event handler
-        var marker;
+        // var marker;
         function onMapClick(e) {
             // alert("Latitude: " + e.latlng.lat + "\nLongitude: " + e.latlng.lng);
             document.getElementById('InputLongitude').value = e.latlng.lat;
