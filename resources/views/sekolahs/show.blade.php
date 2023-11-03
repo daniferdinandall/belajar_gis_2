@@ -35,9 +35,9 @@
         var longitude = document.querySelector('p[dataLongitude]').getAttribute('dataLongitude');
         var latitude = document.querySelector('p[dataLatitude]').getAttribute('dataLatitude');
 
-        var map = L.map('map').setView([longitude, latitude], 17);
+        var map = L.map('map').setView([latitude,longitude], 17);
 
-        var marker = L.marker([longitude, latitude]).addTo(map);
+        var marker = L.marker([latitude,longitude]).addTo(map);
         L.tileLayer('https://{s}.google.com/vt?lyrs=m&x={x}&y={y}&z={z}', {
             maxZoom: 19,
             subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
