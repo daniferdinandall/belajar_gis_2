@@ -10,12 +10,14 @@
     <!-- Make sure you put this AFTER Leaflet's CSS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+        <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6.5.0/turf.min.js"></script>
+
 @stop
 
 @section('content')
-    <form action="{{ route('sekolahs.update',$sekolah->id) }}" method="POST">
+    <form action="{{ route('polygon.store') }}" method="post">
+    {{-- <form id="arrayForm"> --}}
         @csrf
-        @method('PUT')
         <div class="row">
             <div class="col-12">
                 <div class="card">
@@ -25,31 +27,31 @@
                                 <td><label for="InputNamaSekolah">Nama Sekolah</label></td>
                                 <td>:</td>
                                 <td><input type="text" name="namasekolah" id="InputNamaSekolah"
-                                        placeholder="Masukkan nama sekolah" class="form-control" required
-                                        value="{{ $sekolah->namasekolah }}"></td>
+                                        placeholder="Masukkan nama sekolah" class="form-control" required></td>
                             </tr>
                             <tr>
                                 <td><label for="InputAlamat">Alamat</label></td>
                                 <td>:</td>
                                 <td><input type="text" name="alamat" id="InputAlamat"
-                                        placeholder="Masukkan alamat sekolah" class="form-control" required value="{{ $sekolah->alamat }}"></td>
+                                        placeholder="Masukkan alamat sekolah" class="form-control" required></td>
                             </tr>
                             <tr>
                                 <td><label for="InputLatitude">Latitude</label></td>
                                 <td>:</td>
                                 <td><input type="text" name="latitude" id="InputLatitude"
-                                    placeholder="Masukkan latitude sekolah" class="form-control" required value="{{ $sekolah->latitude }}"></td>
+                                        placeholder="Masukkan latitude sekolah" class="form-control" required></td>
                             </tr>
                             <tr>
                                 <td><label for="InputLongitude">Longitude</label></td>
                                 <td>:</td>
                                 <td><input type="text" name="longitude" id="InputLongitude"
-                                        placeholder="Masukkan longitude sekolah" class="form-control" required value="{{ $sekolah->longitude }}"></td>
+                                        placeholder="Masukkan longitude sekolah" class="form-control" required></td>
                             </tr>
+                            <input type="hidden" name="dataArray" id="dataArray">
                             {{-- <tr>
                                 <td colspan="3">
                                     <button type="submit" class="btn btn-primary">Simpan</button>
-                                    <a href="{{ route('sekolahs.index') }}" class="btn btn-default">Batal</a>
+                                    <a href="{{ route('polygon.index') }}" class="btn btn-default">Batal</a>
                                 </td>
 
                             </tr> --}}
@@ -58,7 +60,8 @@
                         <div style="height: 400px;" id="map"></div>
                         <div class="card-footer">
                             <button type="submit" class="btn btn-primary">Simpan</button>
-                            <a href="{{ route('sekolahs.index') }}" class="btn btn-danger">Batal</a>
+                            {{-- <button type="button" id="sendArray" class="btn btn-primary">Send Array</button> --}}
+                            <a href="{{ route('polygon.index') }}" class="btn btn-danger">Batal</a>
                         </div>
                     </div>
                 </div>
@@ -68,34 +71,43 @@
 @stop
 @push('js')
     <script>
-        
-        var longitude = document.getElementById("InputLongitude").value;
-        var latitude = document.getElementById("InputLatitude").value;
-        
-        var map = L.map('map').setView([latitude, longitude], 17);
-        var marker = L.marker([latitude, longitude]).addTo(map);
-        
-        L.tileLayer('https://{s}.google.com/vt?lyrs=m&x={x}&y={y}&z={z}', {
+        var map = L.map('map').setView([-6.88501587006287, 107.57960538511298], 17);
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
-            subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
-        // Define a click event handler
-        // var marker;
-        function onMapClick(e) {
-            // alert("Latitude: " + e.latlng.lat + "\nLongitude: " + e.latlng.lng);
-            document.getElementById('InputLongitude').value = e.latlng.lng;
-            document.getElementById('InputLatitude').value = e.latlng.lat;
 
-            if (marker) {
-                map.removeLayer(marker);
-            }
 
+        var marker;
+        var linearray = [];
+        var polygon;
+
+        map.on('click', function(e) {
+            var lat = e.latlng.lat;
+            var lng = e.latlng.lng;
+            var coord = e.latlng.toString();
+            // if (marker) {
+            //     map.removeLayer(marker);
+            // }
             marker = L.marker(e.latlng).addTo(map)
-                .bindPopup("Koordinat: " + e.latlng.toString())
+                .bindPopup("Koordinat: " + coord)
                 .openPopup();
-        }
+            linearray.push([lat, lng]);
+            if (linearray.length > 1) {
+                if (polygon) {
+                    map.removeLayer(polygon);
+                }
+                polygon = L.polygon(linearray, {
+                    color: 'red'
+                }).addTo(map);
+            }
+            document.getElementById('InputLatitude').value = lat;
+            document.getElementById('InputLongitude').value = lng;
+            var jsonData = JSON.stringify(linearray);
 
-        // Add a click event listener to the map
-        map.on('click', onMapClick);
+            document.getElementById('dataArray').value = jsonData;
+            console.log(document.getElementById('dataArray').value);
+        });
+
     </script>
 @endpush

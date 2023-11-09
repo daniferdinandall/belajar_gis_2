@@ -21,9 +21,10 @@
                     <p>Alamat: {{ $sekolah->alamat }}</p>
                     <p dataLongitude="{{ $sekolah->longitude }}">Longitude: {{ $sekolah->longitude }}</p>
                     <p dataLatitude="{{ $sekolah->latitude }}">Latitude: {{ $sekolah->latitude }}</p>
+                    <input type="hidden" name="dataArray" id="dataArray" value="{{$polylines}}">
                     <a href="{{ route('sekolahs.index') }}" class="btn btn-primary" style="margin-bottom: 20px;">Kembali</a>
 
-                    <div style="height: 200px;" id="map"></div>
+                    <div style="height: 400px;" id="map"></div>
                 </div>
             </div>
         </div>
@@ -32,15 +33,32 @@
 
 @push('js')
     <script>
+        var dots = JSON.parse(document.getElementById('dataArray').value);
+
+        var linearray = []
+        dots.forEach(element => {
+            console.log([element.latitude, element.longitude]);
+
+            linearray.push([element.latitude, element.longitude]);
+        });
+
         var latitude = document.querySelector('p[dataLatitude]').getAttribute('dataLatitude');
         var longitude = document.querySelector('p[dataLongitude]').getAttribute('dataLongitude');
-
+        console.log();
         var map = L.map('map').setView([latitude,longitude], 17);
 
-        var marker = L.marker([latitude,longitude]).addTo(map);
+        // var marker = L.marker([latitude,longitude]).addTo(map);
+
+        L.polyline(linearray, {
+            color: 'red'
+        }).addTo(map);
+
         L.tileLayer('https://{s}.google.com/vt?lyrs=m&x={x}&y={y}&z={z}', {
             maxZoom: 19,
             subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
         }).addTo(map);
+
+        
+
     </script>
 @endpush

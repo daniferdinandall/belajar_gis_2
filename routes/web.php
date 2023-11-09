@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth; 
+// use App\Http\Controllers\PolylineController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,3 +31,5 @@ Route::get('/home', function() {
 
 
 Route::resource('sekolahs', App\Http\Controllers\SekolahController::class)->middleware('auth');
+Route::resource('polyline', App\Http\Controllers\PolylineController::class)->middleware('auth');
+Route::resource('polygon', App\Http\Controllers\PolygonController::class)->middleware('auth');

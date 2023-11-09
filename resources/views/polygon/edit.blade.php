@@ -13,7 +13,7 @@
 @stop
 
 @section('content')
-    <form action="{{ route('sekolahs.update',$sekolah->id) }}" method="POST">
+    <form action="{{ route('polygon.update',$sekolah->id) }}" method="POST">
         @csrf
         @method('PUT')
         <div class="row">
@@ -46,10 +46,12 @@
                                 <td><input type="text" name="longitude" id="InputLongitude"
                                         placeholder="Masukkan longitude sekolah" class="form-control" required value="{{ $sekolah->longitude }}"></td>
                             </tr>
+                            
+                            <input type="hidden" name="dataArray" id="dataArray" value="{{$polygons}}">
                             {{-- <tr>
                                 <td colspan="3">
                                     <button type="submit" class="btn btn-primary">Simpan</button>
-                                    <a href="{{ route('sekolahs.index') }}" class="btn btn-default">Batal</a>
+                                    <a href="{{ route('polygon.index') }}" class="btn btn-default">Batal</a>
                                 </td>
 
                             </tr> --}}
@@ -58,7 +60,8 @@
                         <div style="height: 400px;" id="map"></div>
                         <div class="card-footer">
                             <button type="submit" class="btn btn-primary">Simpan</button>
-                            <a href="{{ route('sekolahs.index') }}" class="btn btn-danger">Batal</a>
+                            <button type="button" class="btn btn-warning" id="clearPolygon">Bersihkan Polygon</button>
+                            <a href="{{ route('polygon.index') }}" class="btn btn-danger">Batal</a>
                         </div>
                     </div>
                 </div>
@@ -73,26 +76,63 @@
         var latitude = document.getElementById("InputLatitude").value;
         
         var map = L.map('map').setView([latitude, longitude], 17);
-        var marker = L.marker([latitude, longitude]).addTo(map);
+        //
+        var clearPolygon = document.getElementById('clearPolygon');
+        var dots = JSON.parse(document.getElementById('dataArray').value);
+
+        var linearray = [];
+        var markers = L.layerGroup().addTo(map);
+        dots.forEach(element => {
+            console.log([element.latitude, element.longitude]);
+            var marker = L.marker([element.latitude,element.longitude]).addTo(markers);
+
+            linearray.push([element.latitude, element.longitude]);
+        });
+        //
+        
+        // var marker = L.marker([latitude, longitude]).addTo(map);
+
+        var polygon = L.polygon(linearray, {
+            color: 'red'
+        }).addTo(map);
+
+        clearPolygon.addEventListener('click', function() {
+            map.removeLayer(polygon);
+            markers.clearLayers();
+            linearray = [];
+        });
         
         L.tileLayer('https://{s}.google.com/vt?lyrs=m&x={x}&y={y}&z={z}', {
             maxZoom: 19,
             subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
         }).addTo(map);
         // Define a click event handler
-        // var marker;
+        var marker;
         function onMapClick(e) {
-            // alert("Latitude: " + e.latlng.lat + "\nLongitude: " + e.latlng.lng);
-            document.getElementById('InputLongitude').value = e.latlng.lng;
-            document.getElementById('InputLatitude').value = e.latlng.lat;
-
-            if (marker) {
-                map.removeLayer(marker);
-            }
-
-            marker = L.marker(e.latlng).addTo(map)
-                .bindPopup("Koordinat: " + e.latlng.toString())
+            var lat = e.latlng.lat;
+            var lng = e.latlng.lng;
+            var coord = e.latlng.toString();
+            // if (marker) {
+            //     map.removeLayer(marker);
+            // }
+            marker = L.marker(e.latlng).addTo(markers)
+                .bindPopup("Koordinat: " + coord)
                 .openPopup();
+            linearray.push([lat, lng]);
+            if (linearray.length > 1) {
+                if (polygon) {
+                    map.removeLayer(polygon);
+                }
+                polygon = L.polygon(linearray, {
+                    color: 'red'
+                }).addTo(map);
+            }
+            document.getElementById('InputLatitude').value = lat;
+            document.getElementById('InputLongitude').value = lng;
+            var jsonData = JSON.stringify(linearray);
+
+            document.getElementById('dataArray').value = jsonData;
+            console.log(document.getElementById('dataArray').value);
         }
 
         // Add a click event listener to the map

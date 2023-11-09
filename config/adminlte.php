@@ -307,6 +307,16 @@ return [
             'url'  => '/sekolahs',
             'icon' => 'fas fa-fw fa-school',
         ],
+        [
+            'text' => 'Polyline',
+            'url'  => '/polyline',
+            'icon' => 'fas fa-fw fa-school',
+        ],
+        [
+            'text' => 'Polygon',
+            'url'  => '/polygon',
+            'icon' => 'fas fa-fw fa-school',
+        ],
         // [
         //     'type' => 'sidebar-menu-search',
         //     'text' => 'search',
