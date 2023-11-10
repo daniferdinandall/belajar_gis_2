@@ -31,5 +31,7 @@ Route::get('/home', function() {
 
 
 Route::resource('sekolahs', App\Http\Controllers\SekolahController::class)->middleware('auth');
-Route::resource('polyline', App\Http\Controllers\PolylineController::class)->middleware('auth');
+Route::resource('markers', App\Http\Controllers\MarkerController::class)->middleware('auth');
+Route::resource('circles', App\Http\Controllers\CircleController::class)->middleware('auth');
 Route::resource('polygon', App\Http\Controllers\PolygonController::class)->middleware('auth');
+Route::resource('polyline', App\Http\Controllers\PolylineController::class)->middleware('auth');

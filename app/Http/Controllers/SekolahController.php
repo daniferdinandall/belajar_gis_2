@@ -92,7 +92,6 @@ class SekolahController extends Controller
     public function update(Request $request, $id)
     {
         //
-        Cookie::queue('nama_cookie', 'nilai_cookie', 60);
 
         $sekolah = Sekolah::findOrFail($id);
         $sekolah->namasekolah = $request->namasekolah;

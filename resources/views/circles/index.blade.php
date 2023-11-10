@@ -12,7 +12,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="card-tools">
-                        <a href="{{ route('sekolahs.create') }}" class="btn btn-primary">Add Sekolah</a>
+                        <a href="{{ route('circles.create') }}" class="btn btn-primary">Add Sekolah</a>
                     </div>
                     <br>
                     <table class="table table-hover table-bordered table-stripped">
@@ -34,11 +34,11 @@
                                     <td>{{ $sekolah->longitude }}</td>
                                     <td>{{ $sekolah->latitude }}</td>
                                     <td>
-                                        <a href="{{ route('sekolahs.show', $sekolah->id) }}" class="btn btn-primary">Lihat</a>
+                                        <a href="{{ route('circles.show', $sekolah->id) }}" class="btn btn-primary">Lihat</a>
                                         {{-- <a href="" class="btn btn-primary">Lihat</a> --}}
-                                        <a href="{{ route('sekolahs.edit', $sekolah->id) }}" class="btn btn-warning">Edit</a>
+                                        <a href="{{ route('circles.edit', $sekolah->id) }}" class="btn btn-warning">Edit</a>
                                         {{-- <a href="" class="btn btn-warning">Edit</a> --}}
-                                        <form action="{{ route('sekolahs.destroy', $sekolah->id) }}" id="delete-form-{{ $sekolah->id }}" method="POST"
+                                        <form action="{{ route('circles.destroy', $sekolah->id) }}" id="delete-form-{{ $sekolah->id }}" method="POST"
                                         {{-- <form action="" method="POST" --}}
                                             style="display: inline-block;">
                                             @csrf
@@ -60,7 +60,7 @@
 <script>
     function confirmDelete(id) {
         if (confirm('Anda yakin ingin menghapus sekolah ini?')) {
-            document.getElementById('delete-for-'+id).submit();
+            document.getElementById('delete-form-'+id).submit();
         }
     }
 </script>

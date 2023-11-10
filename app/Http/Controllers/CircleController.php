@@ -6,9 +6,8 @@ use Illuminate\Support\Facades\Cookie;
 
 use Illuminate\Http\Request;
 use App\Models\Sekolah;
-use App\Models\Polygon;
 
-class PolygonController extends Controller
+class CircleController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,7 +18,7 @@ class PolygonController extends Controller
     {
         //
         $sekolahs = Sekolah::all();
-        return view('polygon.index', [
+        return view('circles.index', [
             'sekolahs' => $sekolahs
         ]);
     }
@@ -31,7 +30,7 @@ class PolygonController extends Controller
      */
     public function create()
     {
-        return view('polygon.create');
+        return view('circles.create');
     }
 
     /**
@@ -40,11 +39,9 @@ class PolygonController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-
     public function store(Request $request)
     {
-        $dataArray = json_decode($request->dataArray);
-        // echo "<script>alert('Debug Objects: " . $request->dataArray . "' );</script>";
+        echo "<script>console.log('Debug Objects: " . $request->namasekolah . "' );</script>";
         $sekolah = new Sekolah;
         $sekolah->namasekolah = $request->namasekolah;
         $sekolah->alamat = $request->alamat;
@@ -52,22 +49,7 @@ class PolygonController extends Controller
         $sekolah->latitude = $request->latitude;
         $sekolah->save();
 
-        $sekolahId = $sekolah->id;
-        
-        foreach ($dataArray as $record) {
-            // Polygon::create($record);
-            if($record[0] == null || $record[1] == null){
-                continue;
-            }
-            $polygon = new Polygon;
-            $polygon->sekolah_id = $sekolahId;
-            $polygon->latitude = $record[0];
-            $polygon->longitude = $record[1];
-            $polygon->save();
-        }
-
-        return redirect()->route('polygon.index')->with('success', 'Data Sekolah Berhasil Ditambahkan');
-        // 
+        return redirect()->route('circles.index')->with('success', 'Data Sekolah Berhasil Ditambahkan');
     }
 
     /**
@@ -80,10 +62,8 @@ class PolygonController extends Controller
     {
         //
         $sekolah = Sekolah::findOrFail($id);
-        $polygons = Polygon::where('sekolah_id', $id)->get();
-        return view('polygon.show', [
-            'sekolah' => $sekolah,
-            'polygons' => json_encode($polygons)
+        return view('circles.show', [
+            'sekolah' => $sekolah
         ]);
     }
 
@@ -97,10 +77,8 @@ class PolygonController extends Controller
     {
         //
         $sekolah = Sekolah::findOrFail($id);
-        $polygons = Polygon::where('sekolah_id', $id)->get();
-        return view('polygon.edit', [
-            'sekolah' => $sekolah,
-            'polygons' => json_encode($polygons)
+        return view('circles.edit', [
+            'sekolah' => $sekolah
         ]);
     }
 
@@ -114,7 +92,6 @@ class PolygonController extends Controller
     public function update(Request $request, $id)
     {
         //
-        $dataArray = json_decode($request->dataArray);
 
         $sekolah = Sekolah::findOrFail($id);
         $sekolah->namasekolah = $request->namasekolah;
@@ -122,22 +99,8 @@ class PolygonController extends Controller
         $sekolah->longitude = $request->longitude;
         $sekolah->latitude = $request->latitude;
         $sekolah->save();
-        $sekolahId = $sekolah->id;
-        Polygon::where('sekolah_id', $sekolahId )->delete();
 
-        foreach ($dataArray as $record) {
-            // Polygon::create($record);
-            if($record[0] == null || $record[1] == null){
-                continue;
-            }
-            $polygon = new Polygon;
-            $polygon->sekolah_id = $sekolahId;
-            $polygon->latitude = $record[0];
-            $polygon->longitude = $record[1];
-            $polygon->save();
-        }
-
-        return redirect()->route('polygon.index')->with('success', 'Data sekolah berhasil diupdate.');
+        return redirect()->route('circles.index')->with('success', 'Data sekolah berhasil diupdate.');
     }
 
     /**
@@ -149,12 +112,10 @@ class PolygonController extends Controller
     public function destroy($id)
     {
         //
-        var_dump($id);
+
         $sekolah = Sekolah::findOrFail($id);
         $sekolah->delete();
-        
-        Polygon::where('sekolah_id', $id )->delete();
 
-        return redirect()->route('polygon.index')->with('success', 'Data sekolah berhasil dihapus.');
+        return redirect()->route('circles.index')->with('success', 'Data sekolah berhasil dihapus.');
     }
 }

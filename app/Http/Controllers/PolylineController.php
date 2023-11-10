@@ -115,7 +115,6 @@ class PolylineController extends Controller
     {
         //
         $dataArray = json_decode($request->dataArray);
-        Cookie::queue('nama_cookie', 'nilai_cookie', 60);
 
         $sekolah = Sekolah::findOrFail($id);
         $sekolah->namasekolah = $request->namasekolah;

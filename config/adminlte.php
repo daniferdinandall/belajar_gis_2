@@ -308,6 +308,16 @@ return [
             'icon' => 'fas fa-fw fa-school',
         ],
         [
+            'text' => 'Marker',
+            'url'  => '/markers',
+            'icon' => 'fas fa-fw fa-school',
+        ],
+        [
+            'text' => 'Circle',
+            'url'  => '/circles',
+            'icon' => 'fas fa-fw fa-school',
+        ],
+        [
             'text' => 'Polyline',
             'url'  => '/polyline',
             'icon' => 'fas fa-fw fa-school',
