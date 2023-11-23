@@ -94,13 +94,13 @@
             if (marker) {
                 map.removeLayer(marker);
             }
-            marker = L.marker(e.latlng).addTo(map)
-                .bindPopup("Koordinat: " + coord)
-                .openPopup();
             if (circle) {
                 map.removeLayer(circle);
             }
-            circle = L.circle([e.latlng], {
+            marker = L.marker(e.latlng).addTo(map)
+                .bindPopup("Koordinat: " + coord)
+                .openPopup();
+            circle = L.circle(e.latlng, {
                 color: 'red',
                 fillColor: '#f03',
                 fillOpacity: 0.4,
